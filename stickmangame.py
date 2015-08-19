@@ -120,7 +120,7 @@ class MovingPlatformSprite(PlatformSprite):
     def __init__(self, game, photo_image, x, y, width, height):
         PlatformSprite.__init__(self, game, photo_image, x, y, \
                 width, height)
-        self.x = 2
+        self.y = 1
         self.counter = 0
         self.last_time = time.time()
         self.width = width
@@ -128,19 +128,19 @@ class MovingPlatformSprite(PlatformSprite):
 
     def coords(self):
         xy = self.game.canvas.coords(self.image)
-        self.coordinates.x1 = xy[0]
-        self.coordinates.y1 = xy[1]
-        self.coordinates.x2 = xy[0] + self.width
-        self.coordinates.y2 = xy[1] + self.height
+        self.coordinates.x1 = xy[1]
+        self.coordinates.y1 = xy[0]
+        self.coordinates.x2 = xy[1] + self.width
+        self.coordinates.y2 = xy[0] + self.height
         return self.coordinates
 
     def move(self):
         if time.time() - self.last_time > 0.03:
             self.last_time = time.time()
-            self.game.canvas.move(self.image, self.x, 0)
+            self.game.canvas.move(self.image, self.y, 0)
             self.counter += 1
             if self.counter > 20:
-                self.x *= -1
+                self.y *= -1
                 self.counter = 0
 
 class DoorSprite(Sprite):
@@ -315,7 +315,7 @@ platform3 = PlatformSprite(g, PhotoImage(file="platform1.gif"), \
         300, 400, 100, 10)
 platform4 = PlatformSprite(g, PhotoImage(file="platform1.gif"), \
         300, 160, 100, 10)
-platform5 = MovingPlatformSprite(g, PhotoImage(file="platform2.gif"),\
+platform5 = PlatformSprite(g, PhotoImage(file="platform2.gif"),\
         175, 350, 66, 10)
 platform6 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
         50, 300, 66, 10)
@@ -323,10 +323,12 @@ platform7 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
         170, 120, 66, 10)
 platform8 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
         45, 60, 66, 10)
-platform9 = MovingPlatformSprite(g, PhotoImage(file="platform3.gif"),\
+platform9 = PlatformSprite(g, PhotoImage(file="platform3.gif"),\
         170, 250, 32, 10)
-platform10 = PlatformSprite(g, PhotoImage(file="platform3.gif"), \
+platform10 = MovingPlatformSprite(g, PhotoImage(file="platform3.gif"), \
         230, 200, 32, 10)
+platform11 = PlatformSprite(g, PhotoImage(file="trap.gif"), \
+        150, 90, 60, 10, True)
 g.sprites.append(platform1)
 g.sprites.append(platform2)
 g.sprites.append(platform3)
@@ -337,6 +339,7 @@ g.sprites.append(platform7)
 g.sprites.append(platform8)
 g.sprites.append(platform9)
 g.sprites.append(platform10)
+g.sprites.append(platform11)
 door = DoorSprite(g, 45, 30, 40, 35)
 g.sprites.append(door)
 sf = StickFigureSprite(g)
