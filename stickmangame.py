@@ -117,10 +117,11 @@ class PlatformSprite(Sprite):
 
 
 class MovingPlatformSprite(PlatformSprite):
-    def __init__(self, game, photo_image, x, y, width, height):
+    def __init__(self, game, photo_image, x, y, width, height, ng=False):
         PlatformSprite.__init__(self, game, photo_image, x, y, \
                 width, height)
-        self.y = 1
+        self.ng = ng
+        self.y = -1
         self.counter = 0
         self.last_time = time.time()
         self.width = width
@@ -137,11 +138,18 @@ class MovingPlatformSprite(PlatformSprite):
     def move(self):
         if time.time() - self.last_time > 0.03:
             self.last_time = time.time()
-            self.game.canvas.move(self.image, self.y, 0)
+            self.game.canvas.move(self.image, 0, self.y,)
             self.counter += 1
-            if self.counter > 20:
+            if self.counter > 40:
                 self.y *= -1
                 self.counter = 0
+
+    def collision(self):
+        if self.ng:
+            time.sleep(1)
+            self.canvas.itemconfig(self.game_over_text, state='normal')
+
+
 
 class DoorSprite(Sprite):
     def __init__(self, game, x, y, width, height):
@@ -327,8 +335,8 @@ platform9 = PlatformSprite(g, PhotoImage(file="platform3.gif"),\
         170, 250, 32, 10)
 platform10 = MovingPlatformSprite(g, PhotoImage(file="platform3.gif"), \
         230, 200, 32, 10)
-platform11 = PlatformSprite(g, PhotoImage(file="trap.gif"), \
-        150, 90, 60, 10, True)
+platform11 = MovingPlatformSprite(g, PhotoImage(file="trap.gif"), \
+        130, 120, 30, 30, True)
 g.sprites.append(platform1)
 g.sprites.append(platform2)
 g.sprites.append(platform3)
