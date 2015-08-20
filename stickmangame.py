@@ -35,8 +35,6 @@ class Game:
                     sprite.move()
             else:
                 time.sleep(1)
-                self.canvas.itemconfig(self.game_over_text, \
-                        state='normal')
             self.tk.update_idletasks()
             self.tk.update()
             time.sleep(0.01)
@@ -147,7 +145,8 @@ class MovingPlatformSprite(PlatformSprite):
     def collision(self):
         if self.ng:
             time.sleep(1)
-            self.canvas.itemconfig(self.game_over_text, state='normal')
+            self.game.canvas.create_text(400,100, text='Game Over', font=("times", 50))
+            self.game.running = False
 
 
 
@@ -300,6 +299,7 @@ class StickFigureSprite(Sprite):
                 and collided_right(co, sprite_co):
                 self.x = 0
                 right = False
+                sprite.collision()
                 if sprite.endgame:
                     self.end(sprite)
         if falling and bottom and self.y == 0 \
@@ -312,6 +312,7 @@ class StickFigureSprite(Sprite):
         sprite.opendoor()
         time.sleep(1)
         self.game.canvas.itemconfig(self.image, state='hidden')
+        self.game.canvas.create_text(260, 50, text='You Win', font=("times", 50))
         sprite.closedoor()
 
 g = Game()
@@ -330,10 +331,10 @@ platform6 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
 platform7 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
         170, 120, 66, 10)
 platform8 = PlatformSprite(g, PhotoImage(file="platform2.gif"), \
-        45, 60, 66, 10)
+        60, 70, 66, 10)
 platform9 = PlatformSprite(g, PhotoImage(file="platform3.gif"),\
         170, 250, 32, 10)
-platform10 = MovingPlatformSprite(g, PhotoImage(file="platform3.gif"), \
+platform10 = PlatformSprite(g, PhotoImage(file="platform3.gif"), \
         230, 200, 32, 10)
 platform11 = MovingPlatformSprite(g, PhotoImage(file="trap.gif"), \
         130, 120, 30, 30, True)
@@ -348,7 +349,7 @@ g.sprites.append(platform8)
 g.sprites.append(platform9)
 g.sprites.append(platform10)
 g.sprites.append(platform11)
-door = DoorSprite(g, 45, 30, 40, 35)
+door = DoorSprite(g, 60, 40, 40, 35)
 g.sprites.append(door)
 sf = StickFigureSprite(g)
 g.sprites.append(sf)
